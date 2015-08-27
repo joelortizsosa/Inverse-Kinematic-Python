@@ -13,3 +13,11 @@ You can find this file in : *C:\Python27\Lib\site-packages\PyQt4*
 You can open this file with a Notepad, the configuration must be very similar to the following image:
 
 ![img2](img/img2.png)
+
+*Note: When Anaconda is installed, sometimes this file is not properly configured
+
+## GUI design
+
+We degined the GUI in QTdessinger installed with PyQT4, you can change the GUI as you like.
+
+![img1](img/img1.png)
