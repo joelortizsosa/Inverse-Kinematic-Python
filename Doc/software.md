@@ -27,3 +27,8 @@ Once you have finished designing your GUI, now it is necessary that you make a c
 For do it, It's necessary that you execute the following command, once you are located in the folder of the projet.
 
 ![img3](img/img3.png)
+
+Finally you can program in python, the code for this program is in the file IHMPoppy.py 
+
+![img4](img/img4.png)
+
