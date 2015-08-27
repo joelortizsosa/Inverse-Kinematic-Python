@@ -30,5 +30,5 @@ For do it, It's necessary that you execute the following command, once you are l
 
 Finally you can program in python, the code for this program is in the file IHMPoppy.py 
 
-![img4](img/img4.png)
+![img6](img/img6.png)
 
