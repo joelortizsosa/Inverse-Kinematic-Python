@@ -1,4 +1,7 @@
-# Inverse-Kinematic-Python
+# Inverse Kinematics (software in Python)
 
 
-![img5](Doc/img/img5.png)
+![img4](Doc/img/img4.png)
+
+
+## [Documentation »](https://github.com/poppy-project/poppy-6dof-right-arm/blob/master/doc/README.md)
