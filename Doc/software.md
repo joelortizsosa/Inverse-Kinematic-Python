@@ -7,3 +7,5 @@ First, you need to have installed:
 * Or install [Anaconda](http://continuum.io/downloads)
 
 Once you have installed all the packages, now you must verify the configuration of the file: **pyuic4.bat**
+
+You can find this file in : *C:\Python27\Lib\site-packages\PyQt4*
