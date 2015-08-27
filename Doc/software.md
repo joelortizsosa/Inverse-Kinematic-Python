@@ -8,4 +8,4 @@ First, you need to have installed:
 
 Once you have installed all the packages, now you must verify the configuration of the following file:
 
-** Pyuic4.bat
+** Pyuic4.bat **
