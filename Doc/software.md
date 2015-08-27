@@ -32,6 +32,10 @@ Finally you can program in python, the code for this program is in the file **IH
 
 ![img6](img/img6.png)
 
+## Execution
+
 To execute the software it's necessary load the command-line interpreter and to be located in the folder of the code, then you put this code:
 
 ![img5](img/img5.png)
+
+![img4](img/img4.png)
