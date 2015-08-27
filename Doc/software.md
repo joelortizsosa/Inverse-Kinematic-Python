@@ -28,7 +28,10 @@ For do it, It's necessary that you execute the following command, once you are l
 
 ![img3](img/img3.png)
 
-Finally you can program in python, the code for this program is in the file IHMPoppy.py 
+Finally you can program in python, the code for this program is in the file **IHMPoppy.py** 
 
 ![img6](img/img6.png)
 
+To execute the software it's necessary load the command-line interpreter and to be located in the folder of the code, then you put this code:
+
+![img5](img/img5.png)
