@@ -26,4 +26,4 @@ Once you have finished designing your GUI, now it is necessary that you make a c
 
 For do it, It's necessary that you execute the following command, once you are located in the folder of the projet.
 
-![img5](img/img5.png)
+![img3](img/img3.png)
