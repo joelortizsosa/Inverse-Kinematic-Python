@@ -6,6 +6,4 @@ First, you need to have installed:
 * [PyQT4](https://riverbankcomputing.com/software/pyqt/download)
 * Or install [Anaconda](http://continuum.io/downloads)
 
-Once you have installed all the packages, now you must verify the configuration of the following file:
-
-**Pyuic4.bat**
+Once you have installed all the packages, now you must verify the configuration of the file: **Pyuic4.bat**
