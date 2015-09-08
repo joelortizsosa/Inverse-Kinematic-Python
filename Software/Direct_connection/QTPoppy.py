@@ -203,9 +203,9 @@ class Ui_Control_Poppy_Right_Arm(object):
         Control_Poppy_Right_Arm.setStatusBar(self.statusbar)
 
         self.retranslateUi(Control_Poppy_Right_Arm)
-        QtCore.QObject.connect(self.Slider_X, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.X_value.setNum)
-        QtCore.QObject.connect(self.Slider_Y, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.Y_value.setNum)
-        QtCore.QObject.connect(self.Slider_Z, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.Z_value.setNum)
+#        QtCore.QObject.connect(self.Slider_X, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.X_value.setNum)
+#        QtCore.QObject.connect(self.Slider_Y, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.Y_value.setNum)
+#        QtCore.QObject.connect(self.Slider_Z, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.Z_value.setNum)
         QtCore.QObject.connect(self.Slider_wrist, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.Wrist_value.setNum)
         QtCore.QMetaObject.connectSlotsByName(Control_Poppy_Right_Arm)
 

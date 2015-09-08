@@ -4,14 +4,17 @@ import sys #on importe le module sys
 from PyQt4 import QtGui #on importe le module QtGui 
 import QTPoppy as IHM
 from poppy.creatures import PoppyRightArm
-from threading import Thread
+#from poppy.creatures import PoppyHumanoid
 from time import sleep
 import numpy as np
 import requests , math, cmath, json
+from PyQt4.QtGui import * 
+from PyQt4.QtCore import * 
 
 def init_arm():
      poppy=PoppyRightArm()
-	 sleep(0.5)
+#     poppy=PoppyHumanoid(simulator='vrep')
+     sleep(0.5)
      poppy.compliant = False
      poppy.power_up()
 # Change PID of Dynamixel motors
@@ -68,7 +71,7 @@ class MaFenetre(QtGui.QMainWindow,IHM.Ui_Control_Poppy_Right_Arm):
         self.setupUi(self)
         self.onInit() # on apppelle une méthode pour créer les objets/widgets
         self.show() # on montre notre UI
-
+        
     def onInit(self):
         #on écrit le corps de notre interface avant de la montrer
 
@@ -82,90 +85,76 @@ class MaFenetre(QtGui.QMainWindow,IHM.Ui_Control_Poppy_Right_Arm):
         else:
             self.connec_disc.setText('Connect')
 			
-	def closeEvent(self,event):
-		self.leThreadDeCom.exit()
+    def closeEvent(self,event):
+        print "good bye"
+#        self.leThreadDeCom.exit()
+        
+class myLCDNumber(QLCDNumber):
 
-class MonThread(Thread):
-    def __init__(self,fenetre):
-        super(MonThread,self).__init__()
-        self.ihm=fenetre
-        self.j=np.array([[42.0065735815700,1.88688034226815],[-0.299041316824250,-4.10873223361288],[-3.11708848964619,-0.0778139097247628],[0.0533663361088492,-0.00204656981431027],[-0.0233476775151460,0.0577419354177804],[-0.00234324559533085,-0.000253340560084825]])
-        self.old_SY=0
-        self.old_SX=0
-        self.old_EY=0	
-        self.old_m2=0			
-        self.old_m3=0			
-        self.old_m4=0			
-        self.old_m5=0		
-        self.poppy=init_arm()		
-    def run(self):
-        while 1:
-			#print 't'
-			#print self.ihm.connec_disc.isChecked()
-            if self.ihm.connec_disc.isChecked():
-                # restriction in the space exploration
-                if self.ihm.Slider_Z < 60:
-                    if self.ihm.Slider_X > 0 and self.ihm.Slider_X <=60:
-                        self.ihm.Slider_X.setValue=60
-                        self.ihm.Slider_X.setMinimum(60)
-                        self.ihm.Slider_X.setMaximum(360)
-                    elif self.ihm.Slider_X < 0 and self.ihm.Slider_X >=-60:
-                        self.ihm.Slider_X.setValue=-60
-                        self.ihm.Slider_X.setMinimum(-60)
-                        self.ihm.Slider_X.setMaximum(-360)
-                else:
-                    self.ihm.Slider_X.setMinimum(-360)
-                    self.ihm.Slider_X.setMaximum(360)
+  @pyqtSlot()
+  def count(self):
+    ihm=fenetre 
+    # verification de la proprete du timer 
+    if ihm.connec_disc.isChecked():
+        # restriction in the space exploration
+        if ihm.Slider_Z < 60:
+            if ihm.Slider_X > 0 and ihm.Slider_X <=60:
+                ihm.Slider_X.setValue=60
+                ihm.Slider_X.setMinimum(60)
+                ihm.Slider_X.setMaximum(360)
+            elif ihm.Slider_X < 0 and ihm.Slider_X >=-60:
+                ihm.Slider_X.setValue=-60
+                ihm.Slider_X.setMinimum(-60)
+                ihm.Slider_X.setMaximum(-360)
+            else:
+                ihm.Slider_X.setMinimum(-360)
+                ihm.Slider_X.setMaximum(360)
                 
-                # obtaining angles for motors r_m2 and r_m3                
-                ecu=np.array([(self.ihm.Slider_Y.value()/10),(self.ihm.Slider_Z.value()/10),(self.ihm.Slider_Y.value()/10)*(self.ihm.Slider_Z.value()/10),(self.ihm.Slider_Y.value()/10)**2,(self.ihm.Slider_Z.value()/10)**2])
-                ang12=np.dot(np.insert(ecu,0,1),self.j)
+        # Show values of the Sliders
+        ihm.X_value.setText(str(ihm.Slider_X.value()/float(10)))
+        ihm.Y_value.setText(str(ihm.Slider_Y.value()/float(10)))
+        ihm.Z_value.setText(str(ihm.Slider_Z.value()/float(10)))
+        # obtaining angles for motors r_m2 and r_m3                
+        ecu=np.array([(ihm.Slider_Y.value()/float(10)),(ihm.Slider_Z.value()/float(10)),(ihm.Slider_Y.value()/float(10))*(ihm.Slider_Z.value()/float(10)),(ihm.Slider_Y.value()/float(10))**2,(ihm.Slider_Z.value()/float(10))**2])
+        ang12=np.dot(np.insert(ecu,0,1),j)
+                    
+        #obtaining angles through inverse kinematics
+        [l_shoulder_y,l_shoulder_x,l_elbow_y]=robot3inv( (ihm.Slider_X.value()/float(10)),
+                                                         (ihm.Slider_Y.value()/float(10)),
+                                                         (ihm.Slider_Z.value()/float(10)) )
+        motor_l_shoulder_y=cadena_4char(l_shoulder_y)
+        ihm.Shoulder_Y_value.setText(str(motor_l_shoulder_y))
+        motor_l_shoulder_x=cadena_4char(l_shoulder_x)
+        ihm.Shoulder_X_value.setText(str(motor_l_shoulder_x))
+        motor_l_elbow_y   =cadena_4char(l_elbow_y)
+        ihm.Elbow_Y_value.setText(str(motor_l_elbow_y))
+        #open/close gripper
+        if ihm.checkBox_gripper.isChecked():
+            motor_r_m5 = round(int(ihm.Gripper_minvalue.text()))
+        else:
+            motor_r_m5 = round(int(ihm.Gripper_maxvalue.text()))
                 
-                #obtaining angles through inverse kinematics
-                [l_shoulder_y,l_shoulder_x,l_elbow_y]=robot3inv((self.ihm.Slider_X.value()/10),
-                                                                (self.ihm.Slider_Y.value()/10),
-                                                                (self.ihm.Slider_Z.value()/10))
-                motor_l_shoulder_y=cadena_4char(l_shoulder_y)
-                self.ihm.Shoulder_Y_value.setText(str(motor_l_shoulder_y))
-                motor_l_shoulder_x=cadena_4char(l_shoulder_x)
-                self.ihm.Shoulder_X_value.setText(str(motor_l_shoulder_x))
-                motor_l_elbow_y   =cadena_4char(l_elbow_y)
-                self.ihm.Elbow_Y_value.setText(str(motor_l_elbow_y))
-                #open/close gripper
-                if self.ihm.checkBox_gripper.isChecked():
-                    motor_r_m5 = round(int(self.ihm.Gripper_minvalue.text()))
-                else:
-                    motor_r_m5 = round(int(self.ihm.Gripper_maxvalue.text()))
-                
-                # poignet
-                poignet = self.ihm.Slider_wrist.value()
-                
-                #envoi
-                if (l_shoulder_y!=self.old_SY or l_shoulder_x!=self.old_SX or l_elbow_y!=self.old_EY or ang12[0]!=self.old_m2 or ang12[1]!=self.old_m3 or round(poignet)!=self.old_m4 or motor_r_m5!=self.old_m5):
-                    print l_shoulder_x
-
-                    self.poppy.r_shoulder_y.goal_position = l_shoulder_y
-                    self.poppy.r_shoulder_x.goal_position =l_shoulder_x
-                    self.poppy.r_arm_z.goal_position = -90
-                    self.poppy.r_elbow_y.goal_position =l_elbow_y				
-                    self.poppy.r_m2.goal_position =ang12[0]
-                    self.poppy.r_m3.goal_position =ang12[1]
-                    self.poppy.r_m4.goal_position =round(poignet)
-                    self.poppy.r_m5.goal_position =motor_r_m5	
-                    self.old_SY=l_shoulder_y
-                    self.old_SX=l_shoulder_x
-                    self.old_EY=l_elbow_y	
-                    self.old_m2=ang12[0]		
-                    self.old_m3=ang12[1]			
-                    self.old_m4=round(poignet)		
-                    self.old_m5=motor_r_m5					
-
-                sleep(0.01)
+        # poignet
+        poignet = ihm.Slider_wrist.value()
+        #envoi
+        poppy.r_shoulder_y.goal_position = l_shoulder_y
+        poppy.r_shoulder_x.goal_position =l_shoulder_x
+        poppy.r_arm_z.goal_position = -90
+        poppy.r_elbow_y.goal_position =l_elbow_y				
+        poppy.r_m2.goal_position =ang12[0]
+        poppy.r_m3.goal_position =ang12[1]
+        poppy.r_m4.goal_position =round(poignet)
+        poppy.r_m5.goal_position =motor_r_m5	
+     
 
 if __name__=='__main__':
+
+    j=np.array([[42.0065735815700,1.88688034226815],[-0.299041316824250,-4.10873223361288],[-3.11708848964619,-0.0778139097247628],[0.0533663361088492,-0.00204656981431027],[-0.0233476775151460,0.0577419354177804],[-0.00234324559533085,-0.000253340560084825]])    
     app=QtGui.QApplication(sys.argv) # on crée un objet application
+    poppy=init_arm()	
+    lcdNumber	 = myLCDNumber()
     fenetre=MaFenetre() # on instancie la classe MaFenetre
-    comThread=MonThread(fenetre)
-    fenetre.leThreadDeCom=comThread
-    comThread.start()
+    timer = QTimer()
+    lcdNumber.connect(timer,SIGNAL("timeout()"),lcdNumber,SLOT("count()"))
+    timer.start(0.001)       
     sys.exit(app.exec_()) # on quitte correctement
